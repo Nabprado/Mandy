@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Class\Mailjet;
 use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,7 @@ class RegisterController extends AbstractController
     #[Route('/inscription', name: 'app_register')]
     public function index(Request $request, UserPasswordHasherInterface $hasher): Response
     {
+        $notification = null;
 
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
@@ -44,9 +46,9 @@ class RegisterController extends AbstractController
                 $this->entityManager->flush();
                 $notification = "Votre inscription s'est correctement déroulée. Vous pouvez vous connecter à votre compte.";
 
-                // $mail = new Mailjet();
-                // $content = 'Bonjour '.$user->getFirstname().'<br> Bienvenue sur la première boutque dédiée au made in France.<br> <br>';
-                // $mail->send($user->getEmail(), $user->getFullname(), 'Bienvenue sur La Boutique Online', $content);
+                $mail = new Mailjet();
+                $content = 'Bonjour '.$user->getFirstname().'<br> Bienvenue sur notre site.<br> <br>';
+                $mail->send($user->getEmail(), $user->getFullname(), 'Bienvenue sur Mandy', $content);
 
             } else {
                 $notification = "L'email que vous avez renseigné existe déjà.";

@@ -4,13 +4,31 @@
 
 {% block content %}
 <h1>Mon compte</h1>
-
-<p>Bienvenue, {{ app.user.firstname }} !</p>
-
-<a href="{{ path ('app_account_password') }}">Modifier mon mot de passe</a>
+<p>Bienvenue {{app.user.firstname}} !</p>
 <hr>
-<a href="#">Gérer mes adresses</a>
-<hr>
-<a href="#">Mes commandes</a>
-
+    {% if is_granted('ROLE_ADMIN') %}
+    <img src=" {{ asset('assets/images/admin.png') }}" alt="adresses" height="25px">
+    <a href="/admin">BACKOFFICE</a>
+    {% endif %}
+<hr><hr>
+<div class="row">
+    <div class="col-md-4 text-center">
+        <img src=" {{ asset('assets/images/address.png') }}" alt="adresses" height="25px">
+        <div class="account-item">
+            <a href="{{ path('app_account_address') }}">Gérer mes adresses</a>
+        </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src=" {{ asset('assets/images/padlock.png') }}" alt="mot de passe" height="25px">
+        <div class="account-item">
+            <a href="{{ path('app_account_password') }}">Modifier mon mot de passe</a>
+        </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src=" {{ asset('assets/images/sent.png') }}" alt="commandes" height="25px">
+        <div class="account-item">
+            <a href="{{ path('app_account_order') }}">Mes commandes</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
