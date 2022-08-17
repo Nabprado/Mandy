@@ -31,14 +31,20 @@
                 {{product.product.name}} <br>
                 <small>{{product.product.subtitle}}</small>
             </td>
+            {% if product.product.stock > 0 %}
+                
             <td>
                 <a href="{{ path('decrease_from_cart', { 'id' : product.product.id }) }}">
                     <img src="{{ asset('assets/images/minus.png') }}" height="10px" style="margin: 0 10px" alt="minus product">
                 </a>
+            {% endif %}
                 {{product.quantity}}
-                <a href="{{ path('add_to_cart', { 'id' : product.product.id }) }}">
-                    <img src="{{ asset('assets/images/plus.png') }}" height="10px" style="margin: 0 10px" alt="add product">
-                </a>
+            {% if product.quantity < product.product.stock %}
+                
+            <a href="{{ path('add_to_cart', { 'id' : product.product.id }) }}">
+                <img src="{{ asset('assets/images/plus.png') }}" height="10px" style="margin: 0 10px" alt="add product">
+            </a>
+            {% endif %}
             </td>
             <td>{{ (product.product.price / 100) | number_format(2, ',', '.')}} €</td>
             <td>{{ ((product.product.price * product.quantity) / 100) | number_format(2, ',', '.')}} €</td>

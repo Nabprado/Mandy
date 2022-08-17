@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Class\Cart;
 use App\Entity\Order;
 use App\Entity\OrderDetails;
+use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -87,16 +88,20 @@ class OrderController extends AbstractController
             //enregistrer mes produits (orderdetails)
 
             foreach ($cart->getFull() as $product) {
-                $orderDetails = new OrderDetails();
-                $orderDetails->setMyOrder($order);
-                $orderDetails->setProduct($product['product']->getName());
-                $orderDetails->setQuantity($product['quantity']);
-                $orderDetails->setPrice($product['product']->getPrice());
-                $orderDetails->setTotal($product['product']->getPrice() * $product['quantity']);
-                $this->entityManager->persist($orderDetails);
+                if($product['product']->getStock() != 0){
+                    $orderDetails = new OrderDetails();
+                    $orderDetails->setMyOrder($order);
+                    $orderDetails->setProduct($product['product']->getName());
+                    $orderDetails->setQuantity($product['quantity']);
+                    $orderDetails->setPrice($product['product']->getPrice());
+                    $orderDetails->setTotal($product['product']->getPrice() * $product['quantity']);
+                    $this->entityManager->persist($orderDetails);
+                }
             }
 
+
             $this->entityManager->flush();
+
 
             return $this->render('order/add.html.twig', [
                 'cart' => $cart->getFull(),
