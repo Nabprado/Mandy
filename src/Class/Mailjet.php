@@ -39,5 +39,39 @@ class Mailjet {
         ];
         $response = $mj->post(Resources::$Email, ['body' => $body]);
         $response->success();
-            }
+    }
+
+    public function sendReceipt($to_email, $to_name, $subject, $firstname, $total_price, $order_date, $order_id){
+
+        $mj = new Client($this->api_key, $this->api_key_secret, true, ['version' => 'v3.1']);
+
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => "nab.prado@outlook.fr",
+                        'Name' => "Mandy"
+                    ],
+                    'To' => [
+                        [
+                            'Email' => $to_email,
+                            'Name' => $to_name
+                        ]
+                    ],
+                    'TemplateID' => 4135870,
+                    'TemplateLanguage' => true,
+                    'Subject' => $subject,
+                    'Variables' => [
+                        'firstname' => $firstname,
+                        'total_price' => $total_price,
+                        'order_date' => $order_date,
+                        'order_id' => $order_id
+                    ]
+                ]
+            ]
+        ];
+        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        $response->success();
+        
+    }
 }
