@@ -32,6 +32,10 @@ class OrderSuccessController extends AbstractController
         // modifier le state à 1
         if ($order->getState() == 0) {
 
+            foreach($cart->getFull() as $product){
+                $product['product']->setStock($product['product']->getStock() - $product['quantity']);
+            }
+
             //vider la session "cart"
             $cart->remove();
 

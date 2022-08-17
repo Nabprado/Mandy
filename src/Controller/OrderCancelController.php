@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Class\Cart;
 use App\Class\Mailjet;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ class OrderCancelController extends AbstractController
     }
 
     #[Route('/commande/erreur/{stripeSessionId}', name: 'app_order_cancel')]
-    public function index($stripeSessionId): Response
+    public function index($stripeSessionId, Cart $cart): Response
     {
         $order = $this->entityManager->getRepository(Order::class)->findOneByStripeSessionId($stripeSessionId);
 
@@ -27,6 +28,11 @@ class OrderCancelController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+        foreach ($cart->getFull() as $product) { 
+            
+            $product['product']->setStock($product['product']->getStock() + $product['quantity']);
+        }
+    
         // envoyer email d'échec de commande
 
         $mail = new Mailjet();
