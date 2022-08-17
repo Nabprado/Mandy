@@ -46,6 +46,14 @@ class OrderSuccessController extends AbstractController
             $mail = new Mailjet();
             $content = 'Bonjour ' . $order->getUser()->getFirstname() . '<br> Merci pour votre commande.<br> <br>';
             $mail->send($order->getUser()->getEmail(), $order->getUser()->getFullname(), 'Votre commande est bien validée.', $content);
+
+            $receipt = new Mailjet();
+            $firstname = $order->getUser()->getFirstname();
+            $total_price = $order->getTotal();
+            $order_date = $order->getCreatedAt();
+            $order_id = $order->getReference();
+            $receipt->sendReceipt($order->getUser()->getEmail(), $order->getUser()->getFullname(), 'Votre facture', $firstname, $total_price, $order_date, $order_id);
+            
         }
 
         return $this->render('order_success/index.html.twig', [
